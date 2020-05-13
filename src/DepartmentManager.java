@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class DepartmentManager {
     private Department[] departments;
     private int size;
@@ -27,7 +29,7 @@ public class DepartmentManager {
         }
     }
 
-    public boolean set(Department dep,int index){
+    public boolean insert(Department dep,int index){
         if(hasSpace()){
             for(int i = departments.length-1; i > index; i++){
                 Department C = departments[i];
@@ -55,7 +57,7 @@ public class DepartmentManager {
         return null;
     }
 
-    public Department change(Department dep, int index){
+    public Department set(Department dep, int index){
         Department buf = departments[index];
         departments[index] = dep;
         if(dep != null && departments[index] == null) size++;
@@ -63,14 +65,34 @@ public class DepartmentManager {
         return buf;
     }
 
-    public Department delete(int index){
+    public Department remove(int index){
         Department buf = departments[index];
         departments[index] = null;
         trim();
         return departments[index];
     }
 
-    public Department delete(String name){
+    public boolean remove(Department department){
+        for(int i = 0; i<departments.length;i++){
+            if(departments[i].equals(department)){
+                departments[i] = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean remove(Equipment equipment){
+        trim();
+        for(int i = 0; i<size;i++){
+            if(departments[i].remove(equipment)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Department remove(String name){
         for(int i = 0; i<departments.length;i++){
             if(departments[i].getName().equals(name)){
                 Department buf = departments[i];
@@ -122,11 +144,26 @@ public class DepartmentManager {
     }
 
     public Department[] getDepartments(){
+        trim();
         Department[] deps = new Department[size];
         for(int i = 0; i<size;i++){
             deps[i] = departments[i];
         }
         return deps;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("registered ");
+        sb.append(size).append(" departments:\n");
+        for(int i = 0;i<departments.length;i++){
+            if(departments[i]!=null){
+                sb.append(departments[i].toString()).append('\n');
+            }else{
+                sb.append("----------nothing----------\n");
+            }
+        }
+        return sb.toString();
     }
 }
 
